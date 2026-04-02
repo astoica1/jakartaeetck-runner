@@ -491,6 +491,9 @@ cat ${JAVA_HOME}/conf/security/java.policy
 echo "ANT_OPTS before ant: "
 ant -diagnostics | grep -i security || true
 
+echo "Listing Java environment variables..."
+env | grep JAVA
+
 echo "JAVA TOOL OPTIONS: "
 echo "_JAVA_OPTIONS=$_JAVA_OPTIONS"
 echo "JAVA_TOOL_OPTIONS=$JAVA_TOOL_OPTIONS"
