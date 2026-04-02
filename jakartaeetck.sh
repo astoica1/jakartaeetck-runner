@@ -489,7 +489,7 @@ cat ${JAVA_HOME}/conf/security/java.policy
 
 
 echo "ANT_OPTS before ant:"
-echo "$ANT_OPTS"
+ant -diagnostics | grep -i security || true
 
 cd  ${TS_HOME}/bin
 export ANT_OPTS="${ANT_OPTS} -Djava.security.manager -Djava.security.policy==${VI_APPCLIENT_POLICY_FILE}"
