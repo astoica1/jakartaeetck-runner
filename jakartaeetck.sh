@@ -334,6 +334,7 @@ ${CTS_HOME}/vi/$GF_VI_TOPLEVEL_DIR/glassfish/bin/asadmin --user admin --password
 ${CTS_HOME}/vi/$GF_VI_TOPLEVEL_DIR/glassfish/bin/asadmin --user admin --passwordfile ${ADMIN_PASSWORD_FILE} create-jvm-options -Djava.security.manager
 ${CTS_HOME}/vi/$GF_VI_TOPLEVEL_DIR/glassfish/bin/asadmin --user admin --passwordfile ${ADMIN_PASSWORD_FILE} create-system-properties "fish.payara.deployment.transform.namespace=false"
 ${CTS_HOME}/vi/$GF_VI_TOPLEVEL_DIR/glassfish/bin/asadmin --user admin --passwordfile ${ADMIN_PASSWORD_FILE} create-jvm-options -Dorg.glassfish.grizzly.http.STRICT_HEADER_NAME_VALIDATION_RFC_9110=false
+${CTS_HOME}/vi/$GF_VI_TOPLEVEL_DIR/glassfish/bin/asadmin --user admin --passwordfile ${ADMIN_PASSWORD_FILE} create-jvm-options --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED
 ${CTS_HOME}/vi/$GF_VI_TOPLEVEL_DIR/glassfish/bin/asadmin --user admin --passwordfile ${ADMIN_PASSWORD_FILE} create-jvm-options -Dorg.glassfish.grizzly.http.STRICT_HEADER_VALUE_VALIDATION_RFC_9110=false
 ${CTS_HOME}/vi/$GF_VI_TOPLEVEL_DIR/glassfish/bin/asadmin --user admin --passwordfile ${ADMIN_PASSWORD_FILE} stop-domain
 
@@ -465,11 +466,15 @@ echo 'permission org.apache.derby.security.SystemPermission "engine", "usederbyi
 if [[ "$JDK" == "JDK17" || "$JDK" == "jdk17" ]]; then
   echo 'permission jakarta.xml.ws.WebServicePermission "CTSPermission3_name";' >> ${VI_SERVER_POLICY_FILE}
 fi
+if [ -n "$TCK_EXTRA_PERMS" ]; then printf '%s\n' "$TCK_EXTRA_PERMS" >> ${VI_SERVER_POLICY_FILE}; fi
 echo '};' >> ${VI_SERVER_POLICY_FILE}
 
 VI_APPCLIENT_POLICY_FILE=${CTS_HOME}/vi/$GF_VI_TOPLEVEL_DIR/glassfish/lib/appclient/client.policy
 echo 'grant {' >> ${VI_APPCLIENT_POLICY_FILE}
 echo 'permission org.apache.derby.security.SystemPermission "engine", "usederbyinternals";' >> ${VI_APPCLIENT_POLICY_FILE}
+echo 'permission java.util.PropertyPermission "*", "read,write";' >> ${VI_APPCLIENT_POLICY_FILE}
+echo 'permission java.lang.RuntimePermission "*";' >> ${VI_APPCLIENT_POLICY_FILE}
+echo 'permission java.io.FilePermission "<<ALL FILES>>", "read,write,delete,execute";' >> ${VI_APPCLIENT_POLICY_FILE}
 echo 'permission "java.lang.RuntimePermission" "getenv.*";' >> ${VI_APPCLIENT_POLICY_FILE}
 echo '};' >> ${VI_APPCLIENT_POLICY_FILE}
 
